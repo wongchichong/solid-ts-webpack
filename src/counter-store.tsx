@@ -1,33 +1,33 @@
-import { createSignal, createContext, useContext, Component, Accessor } from "solid-js";
+import { createSignal, createContext, useContext, Component, Accessor } from "solid-js"
 
 type CounterStore = [
-  Accessor<number>,
-  { increment?: () => void; decrement?: () => void }
-];
+    Accessor<number>,
+    { increment?: () => void; decrement?: () => void }
+]
 
-const CounterContext = createContext<CounterStore>([() => 0, {}]);
+const CounterContext = createContext<CounterStore>([() => 0, {}])
 
-export const CounterProvider: Component<{ count: number }> = props => {
-  const [count, setCount] = createSignal(props.count || 0),
-    store: CounterStore = [
-      count,
-      {
-        increment() {
-          setCount(c => c + 1);
-        },
-        decrement() {
-          setCount(c => c - 1);
-        }
-      }
-    ];
+export const CounterProvider: Component<{ count: number, children }> = (props: { count, children }) => {
+    const [count, setCount] = createSignal(props.count || 0),
+        store: CounterStore = [
+            count,
+            {
+                increment() {
+                    setCount(c => c + 1)
+                },
+                decrement() {
+                    setCount(c => c - 1)
+                }
+            }
+        ]
 
-  return (
-    <CounterContext.Provider value={store}>
-      {props.children}
-    </CounterContext.Provider>
-  );
-};
+    return (
+        <CounterContext.Provider value={store}>
+            {props.children}
+        </CounterContext.Provider>
+    )
+}
 
 export function useCounter() {
-  return useContext(CounterContext);
+    return useContext(CounterContext)
 }
